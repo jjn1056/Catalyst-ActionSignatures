@@ -1,4 +1,8 @@
 Revision history for Perl extension Catalyst-ActionSignatures
 
-0.01    30 May 2011
+0.002   31 May 2015
+        - Fixed incorrect Changes information
+        - Fixed issue with parsing when you run attributes onto
+          the second or more lines.
+0.001   30 May 2015
         - original version.

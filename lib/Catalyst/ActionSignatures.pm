@@ -5,7 +5,7 @@ use B::Hooks::Parser;
 use Carp;
 extends 'signatures';
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 around 'callback', sub {
   my ($orig, $self, $offset, $inject) = @_;
@@ -18,7 +18,7 @@ around 'callback', sub {
   #Is this an action?  Sadly we have to guess using a hueristic...
 
   my $linestr = B::Hooks::Parser::get_linestr();
-  my ($attribute_area) = ($linestr =~m/\)(.*){/);
+  my ($attribute_area) = ($linestr =~m/\)(.*){/s);
 
   # If there's anything in the attribute area, we assume a catalyst action...
   # Sorry thats th best I can do for now, patches to make it smarter very 
@@ -66,10 +66,10 @@ around 'callback', sub {
     # If there's Chained($target/) thats the convention for last
     # action in chain with Args(0).  So if we detect that and there
     # is no Args present, add Args(0).
-    ($attribute_area) = ($linestr =~m/\)(.*){/);
+    ($attribute_area) = ($linestr =~m/\)(.*){/s);
     
     if(
-        $attribute_area =~m/Chained\(['"]?\w+?\/['"]?\)/ 
+        $attribute_area =~m/Chained\(['"]?\w+?\/['"]?\)/
         && $attribute_area!~m/[\s\:]Args/i
     ) {
       $linestr =~s/Chained\(["']?(\w+?)\/["']?\)/Chained\($1\)/;
@@ -79,7 +79,7 @@ around 'callback', sub {
     # If this is chained but no Args, Args($n) or Captures($n), then add 
     # a CaptureArgs(0).  Gotta rebuild the attribute area since we might
     # have modified it above.
-    ($attribute_area) = ($linestr =~m/\)(.*){/);
+    ($attribute_area) = ($linestr =~m/\)(.*){/s);
 
     if(
       $attribute_area =~m/Chained/i && 
