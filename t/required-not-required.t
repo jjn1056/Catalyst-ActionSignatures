@@ -1,0 +1,89 @@
+use Test::Most;
+
+{
+  package MyApp::Model::ReturnsNull;
+  $INC{'MyApp/Model/ReturnsNull.pm'} = __FILE__;
+
+  use Moose;
+  extends 'Catalyst::Model';
+
+  sub ACCEPT_CONTEXT { return undef  }
+
+
+  package MyApp::Model::ReturnsTrue;
+  $INC{'MyApp/Model/ReturnsTrue.pm'} = __FILE__;
+
+  use Moose;
+  extends 'Catalyst::Model';
+
+  sub ACCEPT_CONTEXT { return shift  }
+  
+  package MyApp::Controller::Root;
+  use base 'Catalyst::Controller';
+
+  use Catalyst::ActionSignatures;  
+
+  sub null_ok( Model::ReturnsNull $null, Model::ReturnsTrue $true) :Local {
+    Test::Most::ok !$null;
+    Test::Most::ok $true;
+  }
+
+  sub no_null_1($c, Model::ReturnsNull $null, Model::ReturnsTrue $true) :Path('no_null') {
+    return $c->res->body('no_null_1');
+  }
+
+  sub no_null_2($c, Model::ReturnsNull $null required, Model::ReturnsTrue $true required) :Path('no_null') {
+    return $c->res->body('no_null_2');
+  }
+
+  sub chainroot :Chained(/) PathPrefix CaptureArgs(0) {  }
+
+    sub no_null_chain_1($c, Model::ReturnsNull $null, Model::ReturnsTrue $true) :Chained(chainroot/) PathPart('no_null_chain') {
+      return $c->res->body('no_null_chain_1');
+    }
+
+    sub no_null_chain_2($c, Model::ReturnsNull $null required, Model::ReturnsTrue $true required) :Chained(chainroot/) PathPart('no_null_chain') {
+      return $c->res->body('no_null_chain_2');
+    }
+
+  sub with_args1($c, Model::ReturnsTrue $true required, Arg $id) :Path(with_args) {
+    $c->res->body('with_args1');
+  }
+
+  sub with_args2($c, Model::ReturnsTrue $true required, Arg $id isa '"Int"') :Path(with_args) {
+    $c->res->body('with_args2');
+  }
+
+  package MyApp;
+  use Catalyst;
+  
+  MyApp->setup;
+}
+
+use Catalyst::Test 'MyApp';
+
+{
+  my ($res, $c) = ctx_request('/root/null_ok');
+}
+
+{
+  my ($res, $c) = ctx_request('/root/no_null');
+  is $res->content, 'no_null_1';
+}
+
+{
+  my ($res, $c) = ctx_request('/root/no_null_chain');
+  is $res->content, 'no_null_chain_1';
+}
+
+{
+  my ($res, $c) = ctx_request('/root/with_args/100');
+  is $res->content, 'with_args2';
+}
+
+{
+  my ($res, $c) = ctx_request('/root/with_args/john');
+  is $res->content, 'with_args1';
+}
+
+done_testing;

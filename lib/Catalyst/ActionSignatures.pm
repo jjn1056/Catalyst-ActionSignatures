@@ -5,7 +5,7 @@ use B::Hooks::Parser;
 use Carp;
 extends 'signatures';
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 around 'callback', sub {
   my ($orig, $self, $offset, $inject) = @_;
