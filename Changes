@@ -1,5 +1,8 @@
 Revision history for Perl extension Catalyst-ActionSignatures
 
+0.005   11 June 2015
+        - Fixed support for parameterized models.
+
 0.004   10 June 2015
         - New 'Rationale' document which is a start on explaining the
           whole point of this.
