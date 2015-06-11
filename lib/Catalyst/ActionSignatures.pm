@@ -10,7 +10,7 @@ our $VERSION = '0.004';
 around 'callback', sub {
   my ($orig, $self, $offset, $inject) = @_;
 
-  my @parts = map { $_=~s/^.*([\$\%\@]\w+).*$/$1/; $_ } split ',', $inject;
+  my @parts = map { ($_ =~ /([\$\%\@]\w+)/g) } split ',', $inject;
   my $signature = join(',', ('$self', @parts));
 
   $self->$orig($offset, $signature);

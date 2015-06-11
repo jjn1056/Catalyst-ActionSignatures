@@ -26,7 +26,7 @@ use Test::Most;
 
   sub ACCEPT_CONTEXT {
     my ($self, $c, $arg) = @_;
-    return $arg;
+    return "$arg.$arg";
   }
 
   package MyApp::Controller::Root;
@@ -49,7 +49,7 @@ use Test::Most;
 
   sub chainroot :Chained(/) PathPrefix CaptureArgs(0) {  }
 
-    sub from_arg($res, Model::ReturnsArg<Arg> $model) :Chained(chainroot/) {
+    sub from_arg($res, Model::ReturnsArg<Arg $id isa '"Int"'> $model) :Chained(chainroot/) {
       $res->body("model $model");
     }
 
@@ -102,8 +102,8 @@ use Catalyst::Test 'MyApp';
 }
 
 {
-  my ($res, $c) = ctx_request('/root/from_arg/john');
-  is $res->content, 'model john';
+  my ($res, $c) = ctx_request('/root/from_arg/100');
+  is $res->content, 'model 100.100';
 }
 
 done_testing;
