@@ -217,7 +217,18 @@ Chain with an implicit Args(0).
         $res->body('another_end');
       }
 
-=head1 ENVIROMENT VARIABLES.
+=head1 Model and View parameters
+
+If your Model or View is a factory that takes parameters, you may supply those
+from other existing dependencies:
+
+    # like $c->model('ReturnsArg', $id);
+    sub from_arg($res, Model::ReturnsArg<Arg $id isa '"Int"'> $model) :Local {
+      $res->body("model $model");
+      # $id is also available.
+    }
+
+=head1 ENVIRONMENT VARIABLES.
 
 Set C<CATALYST_METHODSIGNATURES_DEBUG> to true to get initial debugging output
 of the generated method signatures and attribute changes. Useful if you are
