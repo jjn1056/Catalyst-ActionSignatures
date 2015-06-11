@@ -28,7 +28,7 @@ around 'callback', sub {
     $linestr =~s/\{/:Does(MethodSignatureDependencyInjection) :ExecuteArgsTemplate($inject) \{/;
 
     # How many numbered or unnumberd args?
-    my $count_args = scalar(my @countargs = $inject=~m/(Arg)[\d+\s]/ig);
+    my $count_args = scalar(my @countargs = $inject=~m/(Arg)[\d+\s\>]/ig);
     if($count_args and $attribute_area!~m/Args\(.+?\)/i) {
       
       my @constraints = ($inject=~m/Arg[\d+\s+][\$\%\@]\w+\s+isa\s+([\w"']+)/gi);
@@ -43,7 +43,7 @@ around 'callback', sub {
       }
     }
 
-    my $count_capture = scalar(my @countcaps = $inject=~m/(capture)[\d+\s]/ig);
+    my $count_capture = scalar(my @countcaps = $inject=~m/(capture)[\d+\s\>]/ig);
     if($count_capture and $attribute_area!~m/CaptureArgs\(.+?\)/i) {
 
       my @constraints = ($inject=~m/Capture[\d+\s+][\$\%\@]\w+\s+isa\s+([\w"']+)/gi);
@@ -68,12 +68,15 @@ around 'callback', sub {
     # is no Args present, add Args(0).
     ($attribute_area) = ($linestr =~m/\)(.*){/s);
     
-    if(
-        $attribute_area =~m/Chained\(['"]?\w+?\/['"]?\)/
-        && $attribute_area!~m/[\s\:]Args/i
-    ) {
-      $linestr =~s/Chained\(["']?(\w+?)\/["']?\)/Chained\($1\)/;
-      $linestr =~s/\{/ :Args(0) \{/;
+    if($attribute_area =~m/Chained\(['"]?\w+?\/['"]?\)/) {
+      if($attribute_area!~m/[\s\:]Args/i) {
+        $linestr =~s/Chained\(["']?(\w+?)\/["']?\)/Chained\($1\)/;
+        $linestr =~s/\{/ :Args(0) \{/;
+      } else {
+        # Ok so... someone used .../ BUT already declared Args.  Probably
+        # a very common type of error to make.  For now lets fix it.
+        $linestr =~s/Chained\(["']?(\w+?)\/["']?\)/Chained\($1\)/;
+      }
     }
 
     # If this is chained but no Args, Args($n) or Captures($n), then add 

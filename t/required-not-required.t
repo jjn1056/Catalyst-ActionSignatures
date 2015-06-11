@@ -17,7 +17,18 @@ use Test::Most;
   extends 'Catalyst::Model';
 
   sub ACCEPT_CONTEXT { return shift  }
-  
+ 
+  package MyApp::Model::ReturnsArg;
+  $INC{'MyApp/Model/ReturnsArg.pm'} = __FILE__;
+
+  use Moose;
+  extends 'Catalyst::Model';
+
+  sub ACCEPT_CONTEXT {
+    my ($self, $c, $arg) = @_;
+    return $arg;
+  }
+
   package MyApp::Controller::Root;
   use base 'Catalyst::Controller';
 
@@ -37,6 +48,10 @@ use Test::Most;
   }
 
   sub chainroot :Chained(/) PathPrefix CaptureArgs(0) {  }
+
+    sub from_arg($res, Model::ReturnsArg<Arg> $model) :Chained(chainroot/) {
+      $res->body("model $model");
+    }
 
     sub no_null_chain_1($c, Model::ReturnsNull $null, Model::ReturnsTrue $true) :Chained(chainroot/) PathPart('no_null_chain') {
       return $c->res->body('no_null_chain_1');
@@ -84,6 +99,11 @@ use Catalyst::Test 'MyApp';
 {
   my ($res, $c) = ctx_request('/root/with_args/john');
   is $res->content, 'with_args1';
+}
+
+{
+  my ($res, $c) = ctx_request('/root/from_arg/john');
+  is $res->content, 'model john';
 }
 
 done_testing;
