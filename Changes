@@ -1,5 +1,9 @@
 Revision history for Perl extension Catalyst-ActionSignatures
 
+0.004   10 June 2015
+        - New 'Rationale' document which is a start on explaining the
+          whole point of this.
+
 0.003   03 June 2015
         - Play nice with the new 'required' syntax.  Tests
         - increased dependency requirements to make sure we are

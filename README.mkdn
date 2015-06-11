@@ -40,6 +40,8 @@ after $c.
 You should review [Catalyst::ActionRole::MethodSignatureDependencyInjection](https://metacpan.org/pod/Catalyst::ActionRole::MethodSignatureDependencyInjection)
 for more on how to construct signatures.
 
+Also [Catalyst::ActionSignatures::Rationale](https://metacpan.org/pod/Catalyst::ActionSignatures::Rationale) may be useful.
+
 # Args and Captures
 
 If you specify args and captures in your method signature, you can leave off the
@@ -121,7 +123,8 @@ having trouble and want some help to offer a patch!
 
 # SEE ALSO
 
-[Catalyst::Action](https://metacpan.org/pod/Catalyst::Action), [Catalyst](https://metacpan.org/pod/Catalyst), [signatures](https://metacpan.org/pod/signatures)
+[Catalyst::Action](https://metacpan.org/pod/Catalyst::Action), [Catalyst](https://metacpan.org/pod/Catalyst), [signatures](https://metacpan.org/pod/signatures),
+[Catalyst::ActionRole::MethodSignatureDependencyInjection](https://metacpan.org/pod/Catalyst::ActionRole::MethodSignatureDependencyInjection)
 
 # AUTHOR
 

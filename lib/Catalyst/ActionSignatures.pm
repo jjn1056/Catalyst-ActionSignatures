@@ -5,7 +5,7 @@ use B::Hooks::Parser;
 use Carp;
 extends 'signatures';
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 
 around 'callback', sub {
   my ($orig, $self, $offset, $inject) = @_;
@@ -139,6 +139,8 @@ after $c.
 You should review L<Catalyst::ActionRole::MethodSignatureDependencyInjection>
 for more on how to construct signatures.
 
+Also L<Catalyst::ActionSignatures::Rationale> may be useful.
+
 =head1 Args and Captures
 
 If you specify args and captures in your method signature, you can leave off the
@@ -220,7 +222,8 @@ having trouble and want some help to offer a patch!
 
 =head1 SEE ALSO
 
-L<Catalyst::Action>, L<Catalyst>, L<signatures>
+L<Catalyst::Action>, L<Catalyst>, L<signatures>,
+L<Catalyst::ActionRole::MethodSignatureDependencyInjection>
 
 =head1 AUTHOR
  
