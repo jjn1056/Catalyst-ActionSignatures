@@ -5,7 +5,7 @@ use B::Hooks::Parser;
 use Carp;
 extends 'signatures';
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 
 around 'callback', sub {
   my ($orig, $self, $offset, $inject) = @_;
@@ -216,6 +216,24 @@ Chain with an implicit Args(0).
       sub another_end($res) :Chained(another_chain/) {
         $res->body('another_end');
       }
+
+=head1 Models and Views
+
+As in the documentation in L<Catalyst::ActionRole::MethodSignatureDependencyInjection>
+you may declare the required models and views for you action via the method
+prototype:
+
+    sub myaction(Model::User $user) :Local { ... }
+
+You can also access the default/current model and view:
+
+    sub myaction(Model $current_model) :Local { ... }
+
+You can declare models to be required and conform to a type constraint
+
+    use MyApp::MyTypes 'User';
+
+    sub find_user(Model::User $u isa User requires
 
 =head1 Model and View parameters
 
