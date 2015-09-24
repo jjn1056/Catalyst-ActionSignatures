@@ -1,5 +1,9 @@
 Revision history for Perl extension Catalyst-ActionSignatures
 
+0.007   24 September 2015
+        - Increase dependency versions to take advantage of some
+          downstream bugfixes.
+
 0.006   15 JUNE 2015
         - Support for shortcut access to current model/view
 
