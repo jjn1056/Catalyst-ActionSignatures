@@ -1,5 +1,9 @@
 Revision history for Perl extension Catalyst-ActionSignatures
 
+0.009   09 October 2015
+        - $c is now defaulted to exist, if it exists.
+        - Increased dependency versions to close errors.
+
 0.008   25 September 2015
         - Increase dependency versions to take advantage of some
           downstream bugfixes.

@@ -5,26 +5,42 @@ use B::Hooks::Parser;
 use Carp;
 extends 'signatures';
 
-our $VERSION = '0.008';
+our $VERSION = '0.009';
 
 around 'callback', sub {
   my ($orig, $self, $offset, $inject) = @_;
 
-  my @parts = map { ($_ =~ /([\$\%\@]\w+)/g) } split ',', $inject;
-  my $signature = join(',', ('$self', @parts));
+  $inject =~s/\$c,?//g;
 
-  $self->$orig($offset, $signature);
+  my @parts = map { ($_ =~ /([\$\%\@]\w+)/g) } split ',', $inject;
 
   #Is this an action?  Sadly we have to guess using a hueristic...
 
   my $linestr = B::Hooks::Parser::get_linestr();
   my ($attribute_area) = ($linestr =~m/\)(.*){/s);
+  my $signature;
 
+  if($attribute_area =~m/\S/) {
+    $signature = join(',', ('$self', '$c', @parts));
+    if($inject) {
+      $inject = '$c,'. $inject;
+    } else {
+      $inject = '$c';
+    }
+  } else {
+    $signature = join(',', ('$self', @parts));
+  }
+  
+  $self->$orig($offset, $signature);
+  
   # If there's anything in the attribute area, we assume a catalyst action...
   # Sorry thats th best I can do for now, patches to make it smarter very 
   # welcomed.
 
+  $linestr = B::Hooks::Parser::get_linestr(); # reload it since its been changed since we last looked
+
   if($attribute_area =~m/\S/) {
+
     $linestr =~s/\{/:Does(MethodSignatureDependencyInjection) :ExecuteArgsTemplate($inject) \{/;
 
     # How many numbered or unnumberd args?
@@ -115,7 +131,7 @@ Catalyst::ActionSignatures - so you can stop looking at @_
     extends 'Catalyst::Controller';
 
     sub test($Req, $Res, Model::A $A, Model::Z $Z) :Local {
-        # has $self implicitly
+        # has $self and $c implicitly
         $Res->body('Look ma, no @_!')
     }
 
@@ -134,10 +150,8 @@ creating your controllers.  This injects your method signature into the
 code so you don't need to use @_.  You should read L<signatures> to be
 aware of any limitations.
 
-For actions and regular controller methods, "$self" is implicitly injected,
-but '$c' is not.  You should add that to the method signature if you need it
-although you are encouraged to name your dependencies rather than hang it all
-after $c.
+For actions we automatically inject "$self" and "$c"; for regular methods we
+inject just "$self".
 
 You should review L<Catalyst::ActionRole::MethodSignatureDependencyInjection>
 for more on how to construct signatures.
