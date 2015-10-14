@@ -39,7 +39,7 @@ use Test::Most;
 
   has aaa => (is=>'ro', required=>1, default=>100);
   
-  sub test($c, $Req, $Res, Model::A $A, Model::Z $Z) :Local {
+  sub test($Req, $Res, Model::A $A, Model::Z $Z) :Local {
     Test::Most::is ref($c), 'MyApp';
     Test::Most::is ref($Req), 'Catalyst::Request';
     Test::Most::is ref($Res), 'Catalyst::Response';
@@ -101,7 +101,7 @@ use Test::Most;
 
   has aaa => (is=>'ro', required=>1, default=>100);
   
-  sub test($c, $Req, $Res, Model::A $A, Model::Z $Z) :Local {
+  sub test($Req, $Res, Model::A $A, Model::Z $Z) :Local {
     Test::Most::is ref($c), 'MyApp';
     Test::Most::is ref($Req), 'Catalyst::Request';
     Test::Most::is ref($Res), 'Catalyst::Response';

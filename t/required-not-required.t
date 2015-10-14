@@ -39,11 +39,11 @@ use Test::Most;
     Test::Most::ok $true;
   }
 
-  sub no_null_1($c, Model::ReturnsNull $null, Model::ReturnsTrue $true) :Path('no_null') {
+  sub no_null_1(Model::ReturnsNull $null, Model::ReturnsTrue $true) :Path('no_null') {
     return $c->res->body('no_null_1');
   }
 
-  sub no_null_2($c, Model::ReturnsNull $null required, Model::ReturnsTrue $true required) :Path('no_null') {
+  sub no_null_2(Model::ReturnsNull $null required, Model::ReturnsTrue $true required) :Path('no_null') {
     return $c->res->body('no_null_2');
   }
 
@@ -53,19 +53,19 @@ use Test::Most;
       $res->body("model $model");
     }
 
-    sub no_null_chain_1($c, Model::ReturnsNull $null, Model::ReturnsTrue $true) :Chained(chainroot/) PathPart('no_null_chain') {
+    sub no_null_chain_1(Model::ReturnsNull $null, Model::ReturnsTrue $true) :Chained(chainroot/) PathPart('no_null_chain') {
       return $c->res->body('no_null_chain_1');
     }
 
-    sub no_null_chain_2($c, Model::ReturnsNull $null required, Model::ReturnsTrue $true required) :Chained(chainroot/) PathPart('no_null_chain') {
+    sub no_null_chain_2(Model::ReturnsNull $null required, Model::ReturnsTrue $true required) :Chained(chainroot/) PathPart('no_null_chain') {
       return $c->res->body('no_null_chain_2');
     }
 
-  sub with_args1($c, Model::ReturnsTrue $true required, Arg $id) :Path(with_args) {
+  sub with_args1(Model::ReturnsTrue $true required, Arg $id) :Path(with_args) {
     $c->res->body('with_args1');
   }
 
-  sub with_args2($c, Model::ReturnsTrue $true required, Arg $id isa '"Int"') :Path(with_args) {
+  sub with_args2(Model::ReturnsTrue $true required, Arg $id isa '"Int"') :Path(with_args) {
     $c->res->body('with_args2');
   }
 

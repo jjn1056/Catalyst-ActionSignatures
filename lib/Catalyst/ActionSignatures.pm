@@ -5,12 +5,12 @@ use B::Hooks::Parser;
 use Carp;
 extends 'signatures';
 
-our $VERSION = '0.009';
+our $VERSION = '0.010';
 
 around 'callback', sub {
   my ($orig, $self, $offset, $inject) = @_;
 
-  $inject =~s/\$c,?//g;
+  # $inject =~s/\$c,?//g;
 
   my @parts = map { ($_ =~ /([\$\%\@]\w+)/g) } split ',', $inject;
 
